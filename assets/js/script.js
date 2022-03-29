@@ -72,9 +72,9 @@ var getFiveDayForecast = function(latitude, longitude) {
             handleErrors();
         }
     })
+};
 
-}
-
+// function to get current conditions
 var getCurrentConditions = function(latitude, longitude){
     var lat = latitude;
     var long = longitude;
@@ -110,7 +110,6 @@ var getCurrentConditions = function(latitude, longitude){
                     currentConditionsCardBody.append(currentConditionsHumidity);
                     currentConditionsCardBody.append(currentConditionsWind);
                     currentConditionsCardBody.append(currentConditionsUvIndex);
-                    
 
                     // icon attributes
                     currentConditionsIcon.attr("src", "https://openweathermap.org/img/w/" + iconcode + ".png");
@@ -142,6 +141,7 @@ var getCurrentConditions = function(latitude, longitude){
         });
 };
 
+// on city search, handle data and push to functions
 var formSubmitHandler = function(event) {
     event.preventDefault();
 
@@ -151,7 +151,6 @@ var formSubmitHandler = function(event) {
 
     // get value from input
     var currentCity = cityEl.val().trim();
-    cityNameEl.textContent = currentCity + currentDate;
 
     if (currentCity) {
         var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + currentCity + "&units=imperial" + "&APPID=" + apiKey;
@@ -166,13 +165,18 @@ var formSubmitHandler = function(event) {
                 getFiveDayForecast(latitude, longitude);
 
                 // add city name to current forecast container
-                var cityName = document.createElement("h2");
-                cityName.setAttribute("class", "text-right font-weight-bold");
-                cityName.textContent = currentCity;
-                currentForecastContainerEl.append(cityName);
+                var cityNameEl = $("<h2 class='text-center font-weight-bold'>");
+                cityNameEl.text(currentCity);
+                currentForecastContainerEl.append(cityNameEl);
             })
         });
-        renderSearchHistory(currentCity);
+        // create button with city name
+        var searchCityBtn = $("<button class='btn btn-secondary mt-2 w-100' id='" + currentCity + "'>");
+        searchCityBtn.text(currentCity);
+        // console.log(currentCity);
+        historyContainerEl.append(searchCityBtn);
+        // renderSearchHistory(currentCity);
+
         // clear old content
         cityEl.val("");
     } else {
@@ -180,18 +184,20 @@ var formSubmitHandler = function(event) {
     }
 };
 
-var renderSearchHistory = function(currentCity) {
-    var cityArray = [];
-    cityArray.push(currentCity);
-    console.log(cityArray);
+// 
+// var renderSearchHistory = function(currentCity) {
+//     // create object for city history
+//     // var cityHistory = {
+//     //     name: currentCity,
+//     // };
+//     // console.log(cityHistory);
 
-    // create button with city name to re-run getCurrentConditions
-    var searchCityBtn = document.createElement("button");
-    searchCityBtn.className = "btn btn-secondary mt-2 w-100";
-    searchCityBtn.textContent = currentCity;
-    // console.log(currentCity);
-    historyContainerEl.append(searchCityBtn);
-};
+//     // create button with city name to re-run getCurrentConditions
+//     var searchCityBtn = $("<button class='btn btn-secondary mt-2 w-100'>");
+//     searchCityBtn.text(currentCity);
+//     // console.log(currentCity);
+//     historyContainerEl.append(searchCityBtn);
+// };
 
 // EVENT HANDLERS //
 // new city search
@@ -199,8 +205,24 @@ citySearchEl.on("submit", formSubmitHandler);
 
 // clear search history
 $("#clearHistory").on("click", function(event){
+    // clear localstorage
     localStorage.clear();
-    // clear #history container
+    // clear all content in container
     historyContainerEl.html("");
+    // currentForecastContainerEl.html("");
+    // fiveDayContainerEl.html("");
     console.log("clear button clicked");
+});
+
+// clicking on city button in search history re-runs getWeather
+$("#history").on("click", function(event){
+    event.preventDefault();
+    console.log("history button clicked");
+
+    // get city name from set id on button
+    var currentCity = $(this).children().attr("id");
+
+    console.log(currentCity);
+    // pass to getWeather to re-run call
+    // getWeather(currentCity);
 });
