@@ -24,34 +24,36 @@
             <!-- LEFT / container for search city section and history (with clear history button) -->
             <div class="col-12 col-md-3 bg-light mt-3">
                 <!-- search form -->
-                <p class="search-header my-1">Search for a city:</p>
-                <div class="input-group mb-3">
-                    <!-- city search input -->
-                    <input id="city-input" type="text" class="form-control" placeholder="Enter city name" />
-                    <div class="input-group-append">
-                        <!-- submit button with icon -->
-                        <button id="searchBtn" class="btn btn-primary" type="submit">
-                            <!-- search icon (magnifying glass) -->
-                            <i class="bi bi-search"></i>
-                        </button>
+                <form id="city-search">
+                    <label for="city-input" class="my-1">Search for a city:</label>
+                    <div class="input-group mb-3">
+                        <!-- city search input -->
+                        <input id="city-input" type="text" class="form-control" />
+                        <div class="input-group-append">
+                            <!-- submit button with icon -->
+                            <button id="searchBtn" class="btn btn-primary" type="submit">
+                                <!-- search icon (magnifying glass) -->
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </form>
                 <!-- clear history button -->
                 <button id="clearHistory" class="btn btn-primary mb-3 col-12 col-md-12" type="button">Clear History</button>
                 
                 <!-- section for appended locally stored city names, made into buttons -->
-                <div id="history" class="col-12 col-md 3 bg-light">
+                <div id="history" class="col-12 col-md 3 bg-light border-top mt-2">
                 </div>
             </div>
+                <!-- RIGHT / container for current Weather -->
+                <div id="currentForecast" class="col-12 col-md-8 pt-4 mt-3">
+                    <span id="cityName"></span> <span id="date"></span></h4>
+                </div>
 
-            <!-- RIGHT / container for current Weather -->
-            <div id="currentForecast" class="col-12 col-md-9 pt-4 mt-3">
-            </div>
-
-            <!-- RIGHT / container for 5 day forecast -->
-            <div id="fiveDayForecast" class="col-12 col-md-9 pt-4 mt-3">
-            </div>
-            
+                <!-- RIGHT / container for 5 day forecast -->
+                <div id="fiveDayForecast" class="row">
+                    <!-- <h4>5-Day Forecast:</h4> -->
+                </div>
         </div>
     </div>
 
@@ -68,6 +70,8 @@
     <!-- bootstrap and popper -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <!-- moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- core script -->
     <script src="./assets/js/script.js"></script>
 </body>
