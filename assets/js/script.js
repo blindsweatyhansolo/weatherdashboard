@@ -113,11 +113,14 @@ var getWeather = function(currentCity){
                 if (response.ok) {
                     response.json().then((data) => {
                         // console.log(data);
+                        var containerTitle = $("<h3>")
+                            containerTitle.text("5-Day Forecast:")
+                            fiveDayContainerEl.append(containerTitle);
+                            
                         // grab 5 concurrent days data from array, create cards with content
                         for (var i = 2; i < data.list.length; i+=8) {
                             var forecastDateString = moment(data.list[i].dt_txt).format("L");
                             // console.log(forecastDateString);
-            
                             var forecastCol = $("<div class='col-12 col-md-6 col-lg forecast-day mb-3 mt-3'>");
                             var forecastCard = $("<div class='card bg-light shadow'>");
                             var forecastCardBody = $("<div class='card-body'>");
@@ -127,7 +130,6 @@ var getWeather = function(currentCity){
                             var forecastTemp = $("<p class='card-text mb-0'>");
                             var forecastWind = $("<p class='card-text mb-0'>");
                             var forecastHumidity = $("<p class='card-text mb-0'>");
-            
             
                             fiveDayContainerEl.append(forecastCol);
                             forecastCol.append(forecastCard);
@@ -142,7 +144,7 @@ var getWeather = function(currentCity){
                             // icon attributes
                             forecastIcon.attr("src", "https://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png");
                             forecastIcon.attr("alt", data.list[i].weather[0].main);
-
+                            forecastIcon.attr("title", data.list[i].weather[0].main);
 
                             // temp attributes
                             forecastTemp.text(data.list[i].main.temp);
@@ -171,7 +173,7 @@ var getWeather = function(currentCity){
 // on city search, handle data and push to functions
 var formSubmitHandler = function(event) {
     event.preventDefault();
-    
+
     // clear old content
     currentForecastContainerEl.html("");
     fiveDayContainerEl.html("");

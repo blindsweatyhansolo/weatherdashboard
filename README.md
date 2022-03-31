@@ -38,6 +38,6 @@ Deployed:
 
 GitHub Repo: https://github.com/blindsweatyhansolo/weatherdashboard
 
-Screenshot/Live Demo:
+Screenshot:
 
-![screenshot of the Weather Dashboard page]()
+![screenshot of the Weather Dashboard page](./assets/images/weatherdashboardScreenShotFS.png)
