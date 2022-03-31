@@ -12,8 +12,6 @@ var cityEl = $("#city-input");
 var cityNameEl = $("#cityName");
 var currentDate = moment().format("L");
 var searchBtnEl = $("#searchBtn");
-// var cityHistoryArr = [];
-
 
 // api key variable
 var apiKey = "a96c9b1d9614e04af3a4f5f32e7c7b3e"
@@ -163,7 +161,7 @@ var formSubmitHandler = function(event) {
 
     // get value from input
     var currentCity = cityEl.val().trim();
-    console.log(currentCity);
+    // console.log(currentCity);
 
     // clear old content
     cityEl.val("");
@@ -179,14 +177,15 @@ var formSubmitHandler = function(event) {
 };
 
 var saveCityName = function(currentCity){
-
+    // grab city name
     var cityString = currentCity;
 
-    // create object for city name
+    // create object to save city name
     var savedCity = {
         name: cityString
     }
 
+    // load cityHistoryArr, if empty create empty array, otherwise parse data
     var cityHistoryArr = localStorage.getItem("cityHistoryArr");
 
     if (cityHistoryArr === null) {
@@ -195,35 +194,33 @@ var saveCityName = function(currentCity){
         cityHistoryArr = JSON.parse(cityHistoryArr);
     }
 
+    // push savedCity data to new/loaded array
     cityHistoryArr.push(savedCity);
-    // console.log(cityHistoryArr);
 
     var newSavedCity = JSON.stringify(cityHistoryArr);
     localStorage.setItem("cityHistoryArr", newSavedCity);
-
     // console.log(cityHistoryArr);
-
-
-
-    // localStorage.setItem("cityStorage", JSON.stringify(cityHistoryArr));
 };
 
 var generateHistoryButton = function(currentCity) {
+    // create button with id set to currentCity's value (city name)
     var historyBtn = $("<button>");
     historyBtn.attr("class", "btn btn-outline-secondary w-100 mb-2 history-btn");
     historyBtn.attr("type", "button");
     historyBtn.attr("id", currentCity);
     historyBtn.text(currentCity);
+    // prepend new buttons to the top of the history container
     historyContainerEl.prepend(historyBtn);
 };
 
 // load search history function
 var renderSearchHistory = function() {
 
-    // get city name from localstorage
+    // get city name from localstorage, parse data
     var cityHistoryArr = localStorage.getItem("cityHistoryArr");
     cityHistoryArr = JSON.parse(cityHistoryArr);
 
+    // if array is NOT empty, create buttons with name value from array
     if (cityHistoryArr !== null) {
         for (i = 0; i < cityHistoryArr.length; i++) {
             var historyBtn = $("<button>");
@@ -240,7 +237,7 @@ var renderSearchHistory = function() {
 // EVENT HANDLERS //
 // new city search
 citySearchEl.on("submit", formSubmitHandler);
-searchBtnEl.on("click", formSubmitHandler);
+// searchBtnEl.on("click", formSubmitHandler);
 
 // clear search history
 $("#clearHistory").on("click", function(event){
@@ -251,23 +248,24 @@ $("#clearHistory").on("click", function(event){
     historyContainerEl.html("");
     currentForecastContainerEl.html("");
     fiveDayContainerEl.html("");
-    console.log("clear button clicked");
+    // console.log("clear button clicked");
 });
 
 // clicking on city button in search history re-runs getWeather
 $("#history").on("click", function(event){
     event.preventDefault();
-    console.log("history button clicked");
-
+    var targetEl = event.target;
+    // console.log("history button clicked");
+    
     // clear old content
     currentForecastContainerEl.html("");
     fiveDayContainerEl.html("");
 
-    // get city name from set id on button
-    var currentCity = $(this).children().attr("id");
-
-    console.log(currentCity);
-
-    // pass to getWeather to re-run call
-    getWeather(currentCity);
+    if (targetEl.matches (".history-btn")) {
+        var currentCity = targetEl.getAttribute("id");
+        // console.log(currentCity);
+        
+        // pass to getWeather to re-run call
+        getWeather(currentCity);
+    }
 });
