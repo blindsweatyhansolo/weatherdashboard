@@ -44,7 +44,7 @@ var getWeather = function(currentCity){
                 // if 200 (response ok)
                 if (response.ok) {
                     response.json().then((data) => {
-                            // console.log(data);
+                            console.log(data);
 
                             // create new DOM elements for displaying current weather
                             var currentConditionsDiv = $("<div class='card bg-light shadow px-3 py-3'>");
