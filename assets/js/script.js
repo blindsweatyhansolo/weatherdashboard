@@ -25,26 +25,32 @@ var handleErrors = (response) => {
     return response;
 };
 
+// function to get weather data from api calls using value from new city search or history button
 var getWeather = function(currentCity){
+    // format city search api url
     var cityQueryUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + currentCity + "&units=imperial" + "&APPID=" + apiKey;
     
-    // get latitude and longitude from api
     fetch(cityQueryUrl).then(function(response){
         response.json().then(function(data){
+            // grab latitude and longitude values from api endpoints
             var lat = data.coord.lat;
             var long = data.coord.lon;
 
+            // CURRENT DAY WEATHER //
+            // format onecall api url with lat and long values, using imperial units
             var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + long + "&units=imperial&exclude=hourly,daily&appid=" + apiKey;
     
-            // current day weather
             fetch(apiUrl).then((response) => {
+                // if 200 (response ok)
                 if (response.ok) {
                     response.json().then((data) => {
-                            console.log(data);
-                            // create new DOM elements
+                            // console.log(data);
+
+                            // create new DOM elements for displaying current weather
                             var currentConditionsDiv = $("<div class='card bg-light shadow px-3 py-3'>");
                             var currentConditionsCardBody = $("<div class='card-body'>");
                             var cityNameTitle = $("<h2 class='card-title text-left'>");
+                            // set card title to currentCity's value
                             cityNameTitle.text(currentCity);
                             var currentConditionsDate = $("<h5 class='card-title'>");
                             currentConditionsDate.text(currentDate);
@@ -84,7 +90,7 @@ var getWeather = function(currentCity){
                             currentConditionsHumidity.prepend("Humidity: ");
                             currentConditionsHumidity.append(" %");
         
-                            // wind attributes
+                            // wind speed attributes
                             currentConditionsWind.text(data.current.wind_speed);
                             currentConditionsWind.prepend("Wind: ");
                             currentConditionsWind.append(" MPH");
@@ -94,17 +100,20 @@ var getWeather = function(currentCity){
                             currentConditionsUvIndex.prepend("UV Index: ");
                         });
                     } else {
+                        // if error occurs
                         handleErrors();
                     }
             });
-    
-            // five day forecast weather
+            
+            // FIVE DAY FORECAST //
+            // format five day forecast api url
             var forecastApiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + long + "&units=imperial&appid=" + apiKey;
         
             fetch(forecastApiUrl).then((response) =>{
                 if (response.ok) {
                     response.json().then((data) => {
                         // console.log(data);
+                        // grab 5 concurrent days data from array, create cards with content
                         for (var i = 2; i < data.list.length; i+=8) {
                             var forecastDateString = moment(data.list[i].dt_txt).format("L");
                             // console.log(forecastDateString);
@@ -113,6 +122,7 @@ var getWeather = function(currentCity){
                             var forecastCard = $("<div class='card bg-light shadow'>");
                             var forecastCardBody = $("<div class='card-body'>");
                             var forecastDate = $("<h5 class='card-title'>");
+                            forecastDate.text(forecastDateString);
                             var forecastIcon = $("<img>");
                             var forecastTemp = $("<p class='card-text mb-0'>");
                             var forecastWind = $("<p class='card-text mb-0'>");
@@ -129,15 +139,22 @@ var getWeather = function(currentCity){
                             forecastCardBody.append(forecastWind);
                             forecastCardBody.append(forecastHumidity);
                             
+                            // icon attributes
                             forecastIcon.attr("src", "https://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png");
                             forecastIcon.attr("alt", data.list[i].weather[0].main);
-                            forecastDate.text(forecastDateString);
+
+
+                            // temp attributes
                             forecastTemp.text(data.list[i].main.temp);
                             forecastTemp.prepend("Temp: ");
                             forecastTemp.append("&deg;F");
+
+                            // wind speed attributes
                             forecastWind.text(data.list[i].wind.speed);
                             forecastWind.prepend("Wind: ");
                             forecastWind.append(" MPH");
+
+                            // humidity attributes
                             forecastHumidity.text(data.list[i].main.humidity);
                             forecastHumidity.prepend("Humidity: ");
                             forecastHumidity.append(" %");
@@ -166,16 +183,13 @@ var formSubmitHandler = function(event) {
     // clear old content
     cityEl.val("");
 
-    // send value as parameter for getWeather and generateHistoryButton
+    // send value as parameter for getWeather, generateHistoryButton, and saveCityName
     getWeather(currentCity);
-
     generateHistoryButton(currentCity);
-    
-    // save city name to localstorage
     saveCityName(currentCity);
-
 };
 
+// save city name to localstorage
 var saveCityName = function(currentCity){
     // grab city name
     var cityString = currentCity;
@@ -185,9 +199,10 @@ var saveCityName = function(currentCity){
         name: cityString
     }
 
-    // load cityHistoryArr, if empty create empty array, otherwise parse data
+    // grab "cityHistoryArr" key from localstorage
     var cityHistoryArr = localStorage.getItem("cityHistoryArr");
-
+    
+    // load cityHistoryArr, if empty create empty array, otherwise parse data
     if (cityHistoryArr === null) {
         cityHistoryArr = [];
     } else {
@@ -261,7 +276,9 @@ $("#history").on("click", function(event){
     currentForecastContainerEl.html("");
     fiveDayContainerEl.html("");
 
+    // if button clicked matches class 'history-btn' to avoid bubbling
     if (targetEl.matches (".history-btn")) {
+        // grab city name that was set as the button's id
         var currentCity = targetEl.getAttribute("id");
         // console.log(currentCity);
         
