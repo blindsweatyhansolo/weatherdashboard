@@ -59,6 +59,8 @@ var getWeather = function(currentCity){
                             var currentConditionsHumidity = $("<p class='card-text mb-0'>");
                             var currentConditionsWind = $("<p class='card-text mb-0'>");
                             var currentConditionsUvIndex = $("<p class='card-text mb-0'>");
+                            var currentConditionsUvIndexSpan = $("<span>");
+                            currentConditionsUvIndexSpan.attr("id", "uvIndex")
                             // icon code from data array
                             var iconcode = data.current.weather[0].icon;
         
@@ -96,8 +98,23 @@ var getWeather = function(currentCity){
                             currentConditionsWind.append(" MPH");
         
                             // uv index attributes
-                            currentConditionsUvIndex.text(data.current.uvi);
+                            var uvIndex = data.current.uvi;
                             currentConditionsUvIndex.prepend("UV Index: ");
+                            currentConditionsUvIndexSpan.text(uvIndex);
+                            currentConditionsUvIndex.append(currentConditionsUvIndexSpan);
+
+
+                            
+                            if (uvIndex < 3) {
+                                currentConditionsUvIndexSpan.attr("class", "text-light bg-success mx-1 px-2 py-1 rounded");
+                                // currentConditionsUvIndexSpan.attr("class", "bg-success");
+                            } else if (uvIndex > 3 && uvIndex < 5) {
+                                currentConditionsUvIndexSpan.attr("class", "text-light bg-warning mx-1 px-2 py-1 rounded");
+                                // currentConditionsUvIndexSpan.attr("class", "bg-danger");
+                            } else if (uvIndex > 5){
+                                currentConditionsUvIndexSpan.attr("class", "text-light bg-danger mx-1 px-2 py-1 rounded");
+                            }
+
                         });
                     } else {
                         // if error occurs
@@ -142,6 +159,7 @@ var getWeather = function(currentCity){
                             // icon attributes
                             forecastIcon.attr("src", "https://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png");
                             forecastIcon.attr("alt", data.list[i].weather[0].main);
+                            forecastIcon.attr("title", data.list[i].weather[0].main);
 
 
                             // temp attributes
