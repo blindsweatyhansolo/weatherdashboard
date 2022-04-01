@@ -186,13 +186,12 @@ var getWeather = function(currentCity){
                     }
                 })
 
-                // generateHistoryButton(currentCity);
+                // send validated city name to saveCityName function
                 saveCityName(currentCity);
 
             } else {
                 alert("NOT VALID CITY");
             }
-            
         })
     });
 };
@@ -214,8 +213,6 @@ var formSubmitHandler = function(event) {
 
     // send value as parameter for getWeather
     getWeather(currentCity);
-    // generateHistoryButton(currentCity);
-    // saveCityName(currentCity);
 };
 
 // save city name to localstorage
@@ -233,6 +230,7 @@ var saveCityName = function(currentCity){
         cityHistoryArr = JSON.parse(cityHistoryArr);
     }
 
+    // check for duplicates in array, only push to array AND to generate button function if none found
     if (!cityHistoryArr.includes(cityString)) {
         cityHistoryArr.push(cityString);
         generateHistoryButton(currentCity);
@@ -240,16 +238,13 @@ var saveCityName = function(currentCity){
     } else {
         console.log("duplicate found");
     }
-    
-
-    // push savedCity data to new/loaded array
 
     var newSavedCity = JSON.stringify(cityHistoryArr);
     localStorage.setItem("cityHistoryArr", newSavedCity);
     // console.log(cityHistoryArr);
-
 };
 
+// generate buttons with city name function
 var generateHistoryButton = function(currentCity) {
     // create button with id set to currentCity's value (city name)
     var historyBtn = $("<button>");
@@ -308,7 +303,7 @@ $("#history").on("click", function(event){
     currentForecastContainerEl.html("");
     fiveDayContainerEl.html("");
 
-    // if button clicked matches class 'history-btn' to avoid bubbling
+    // if button clicked matches class 'history-btn' (to avoid bubbling)
     if (targetEl.matches (".history-btn")) {
         // grab city name that was set as the button's id
         var currentCity = targetEl.getAttribute("id");
