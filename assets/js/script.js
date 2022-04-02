@@ -52,7 +52,7 @@ var getWeather = function(currentCity){
                                 // create new DOM elements for displaying current weather
                                 var currentConditionsDiv = $("<div class='card bg-light shadow px-3 py-3'>");
                                 var currentConditionsCardBody = $("<div class='card-body'>");
-                                var cityNameTitle = $("<h2 class='card-title text-left'>");
+                                var cityNameTitle = $("<h2 class='card-title text-left history-btn'>");
                                 // set card title to currentCity's value
                                 cityNameTitle.text(currentCity);
                                 var currentConditionsDate = $("<h5 class='card-title'>");
@@ -205,7 +205,7 @@ var formSubmitHandler = function(event) {
     fiveDayContainerEl.html("");
 
     // get value from input
-    var currentCity = cityEl.val().trim();
+    var currentCity = cityEl.val().trim().toLowerCase();
     // console.log(currentCity);
 
     // clear old content
@@ -246,6 +246,7 @@ var saveCityName = function(currentCity){
 
 // generate buttons with city name function
 var generateHistoryButton = function(currentCity) {
+    
     // create button with id set to currentCity's value (city name)
     var historyBtn = $("<button>");
     historyBtn.attr("class", "btn btn-outline-secondary w-100 mb-2 history-btn");
