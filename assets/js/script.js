@@ -14,7 +14,7 @@ var currentDate = moment().format("L");
 var searchBtnEl = $("#searchBtn");
 
 // api key variable
-var apiKey = "a96c9b1d9614e04af3a4f5f32e7c7b3e"
+var apiKey = "a96c9b1d9614e04af3a4f5f32e7c7b3e";
 
 
 // function to handle server side errors
@@ -107,15 +107,17 @@ var getWeather = function(currentCity){
                                 currentConditionsUvIndex.append(currentConditionsUvIndexSpan);
     
     
-                                
+                                // uv index attributes according to index scale from the UnitedStates EPA website
                                 if (uvIndex < 3) {
                                     currentConditionsUvIndexSpan.attr("class", "text-light bg-success mx-1 px-2 py-1 rounded");
-                                    // currentConditionsUvIndexSpan.attr("class", "bg-success");
                                 } else if (uvIndex > 3 && uvIndex < 5) {
                                     currentConditionsUvIndexSpan.attr("class", "text-light bg-warning mx-1 px-2 py-1 rounded");
-                                    // currentConditionsUvIndexSpan.attr("class", "bg-danger");
                                 } else if (uvIndex > 5){
+                                    // add safety warning for any index above the moderate index
+                                    var uvIndexWarning = $("<p class='fst-italic text-muted pb-0'>");
+                                    uvIndexWarning.text("UV Warning: high risk of harm from unprotected sun exposure. Protection against skin and eye damage is needed.");
                                     currentConditionsUvIndexSpan.attr("class", "text-light bg-danger mx-1 px-2 py-1 rounded");
+                                    currentConditionsUvIndex.append(uvIndexWarning);
                                 }
     
                             });
@@ -139,7 +141,7 @@ var getWeather = function(currentCity){
                                 // console.log(forecastDateString);
                 
                                 var forecastCol = $("<div class='col-12 col-md-6 col-lg forecast-day mb-3 mt-3'>");
-                                var forecastCard = $("<div class='card bg-light shadow'>");
+                                var forecastCard = $("<div class='card bg-secondary bg-gradient shadow'>");
                                 var forecastCardBody = $("<div class='card-body'>");
                                 var forecastDate = $("<h5 class='card-title'>");
                                 forecastDate.text(forecastDateString);
@@ -190,7 +192,19 @@ var getWeather = function(currentCity){
                 saveCityName(currentCity);
 
             } else {
-                alert("NOT VALID CITY");
+                // create card for message instead of alert
+                var messageContainerEl = $("<div class='card bg-warning bg-gradient shadow px-3 py-3'>");
+                var messageTitle = $("<h2 class='card-title text-center'>");
+                messageTitle.text("Invalid Search Term")
+                var messageContent = $("<p class='card-text mb-0'>");
+                messageContent.text("Not a valid city search. Please check your spelling or try a different city.");
+
+                messageContainerEl.append(messageTitle);
+                messageContainerEl.append(messageContent);
+
+                // append to container
+                currentForecastContainerEl.append(messageContainerEl);
+                // alert("NOT VALID CITY");
             }
         })
     });
@@ -204,7 +218,7 @@ var formSubmitHandler = function(event) {
     currentForecastContainerEl.html("");
     fiveDayContainerEl.html("");
 
-    // get value from input
+    // get value from input, change to lowercase to avoid duplication errors further into functions
     var currentCity = cityEl.val().trim().toLowerCase();
     // console.log(currentCity);
 
@@ -275,7 +289,6 @@ var renderSearchHistory = function() {
         };
     }
 };
-
 
 // EVENT HANDLERS //
 // new city search
